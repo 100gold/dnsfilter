@@ -1,5 +1,6 @@
 #define TEST_EXPORTS
 #include "testdll.h"
+
 #include <Windows.h>
 
 void function_1(int a, int b)
