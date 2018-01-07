@@ -18,5 +18,13 @@
     <ClCompile Include="proxy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="dnsprotocol.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="dnsprotocol.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,6 +1,12 @@
 #include <Windows.h>
 #include <winsock.h>
 
+#include <sstream>
+#include <iomanip>
+
+#include "dnsprotocol.h"
+
+
 typedef int (WINAPI *PSENDTO)(
   SOCKET s,
   const char* buf,
@@ -10,14 +16,70 @@ typedef int (WINAPI *PSENDTO)(
   int tolen
   );
 
+
 static PSENDTO g_original_sendto = nullptr;
 static HANDLE g_thread = 0;
 
+
 int mysendto(SOCKET s, const char* buf, int len, int flags, const struct sockaddr* to, int tolen)
 {
-  MessageBoxA(0, "HOOK", "HOOK", 0);
+  do
+  {
+    struct sockaddr_in local_sockaddr;
+    int local_sockaddrlen = sizeof(local_sockaddr);
+
+    if (getsockname(s, (struct sockaddr*)&local_sockaddr, &local_sockaddrlen) != 0)
+    {
+      break;
+    }
+
+    if (local_sockaddr.sin_family != AF_INET)
+    {
+      break;
+    }
+
+    if (local_sockaddrlen != sizeof(local_sockaddr))
+    {
+      break;
+    }
+
+    if (htons(local_sockaddr.sin_port) != 53)
+    {
+      break;
+    }
+
+    if (len < 0)
+    {
+      break;
+    }
+
+    DNS_RESPONSE response;
+    if (!dns_parse_buffer(buf, (size_t)len, &response))
+    {
+      break;
+    }
+
+    std::stringstream st;
+
+    st << "dns reponse: ";
+    for (auto& ans : response.answers)
+    {
+      st << ans.name << ", type " << ans.type;
+      if (ans.type = 1)
+      {
+        st << std::hex << std::setfill('0') << std::setw(4) << std::uppercase << *(uint32_t*)ans.rdata.data();
+      }
+      st << ";";
+    }
+    st << "\n";
+
+    OutputDebugStringA(st.str().c_str());
+
+  } while (false);
+
   return g_original_sendto(s, buf, len, flags, to, tolen);
 }
+
 
 DWORD WINAPI install_iat_hook(LPVOID)
 {
@@ -56,13 +118,13 @@ DWORD WINAPI install_iat_hook(LPVOID)
         {
           if ((PSENDTO)first_thunk->u1.AddressOfData == g_original_sendto)
           {
-            DebugBreak();
             auto page_start = (ptrdiff_t)first_thunk - ((ptrdiff_t)first_thunk % 4096);
             DWORD old_protect;
             VirtualProtect((LPVOID)page_start, 4096, PAGE_READWRITE, &old_protect);
             first_thunk->u1.AddressOfData = (decltype(first_thunk->u1.AddressOfData))(&mysendto);
             VirtualProtect((LPVOID)page_start, 4096, old_protect, &old_protect);
             sendto_not_patched = false;
+            OutputDebugStringA("IAT hook intalled\n");
             break;
           }
           ++first_thunk;
@@ -83,6 +145,7 @@ DWORD WINAPI install_iat_hook(LPVOID)
   g_thread = 0;
   ExitThread(0);
 }
+
 
 BOOL APIENTRY DllMain(HMODULE, DWORD reason, LPVOID)
 {

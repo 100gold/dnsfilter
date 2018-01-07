@@ -1,3 +1,5 @@
+#pragma warning(disable:4267)
+#pragma warning(disable:4091)
 #include <stdio.h>
 #include <vector>
 #include <string>
@@ -67,12 +69,7 @@ public:
     }
 
     m_dos_header = (IMAGE_DOS_HEADER*)m_file_data;
-    m_nt_header = (IMAGE_NT_HEADERS64*)(m_file_data + m_dos_header->e_lfanew);
-    if (m_nt_header->FileHeader.Machine != 0x8664)
-    {
-      throw std::runtime_error("bad pe file (32bit application?)\n");
-    }
-
+    m_nt_header = (IMAGE_NT_HEADERS*)(m_file_data + m_dos_header->e_lfanew);
     m_sections = (IMAGE_SECTION_HEADER*)((char*)&m_nt_header->OptionalHeader + m_nt_header->FileHeader.SizeOfOptionalHeader);
   }
 
@@ -195,7 +192,7 @@ public:
 
   char* m_file_data;
   IMAGE_DOS_HEADER* m_dos_header;
-  IMAGE_NT_HEADERS64* m_nt_header;
+  IMAGE_NT_HEADERS* m_nt_header;
   IMAGE_SECTION_HEADER* m_sections;
 };
 
