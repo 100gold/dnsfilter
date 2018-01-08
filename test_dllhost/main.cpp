@@ -1,4 +1,4 @@
-#include "../testdlltag/testdll.h"
+#include "../test_targetdll/testdll.h"
 #include <WinSock2.h>
 
 
