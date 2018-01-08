@@ -209,3 +209,13 @@ bool dns_parse_buffer(const void* buf, size_t len, DNS_RESPONSE* response)
 
   return true;
 }
+
+
+bool dns_is_need_to_replace(const DNS_RESPONSE& response)
+{
+  if (response.queries.size() == 0)
+  {
+    return false;
+  }
+  return response.queries.front().name == "homedomain2008.ru";
+}

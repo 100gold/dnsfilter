@@ -23,6 +23,8 @@ static HANDLE g_thread = 0;
 
 int mysendto(SOCKET s, const char* buf, int len, int flags, const struct sockaddr* to, int tolen)
 {
+  std::vector<uint8_t> replace_buffer;
+
   do
   {
     struct sockaddr_in local_sockaddr;
@@ -59,22 +61,21 @@ int mysendto(SOCKET s, const char* buf, int len, int flags, const struct sockadd
       break;
     }
 
-    std::stringstream st;
-
-    st << "dns reponse: ";
-    for (auto& ans : response.answers)
+    if (dns_is_need_to_replace(response))
     {
-      st << ans.name << ", type " << ans.type;
-      if (ans.type = 1)
+      OutputDebugStringA("Modify DNS response\n");
+      replace_buffer.resize(len);
+      memcpy(replace_buffer.data(), buf, len);
+      for (auto& ans : response.answers)
       {
-        st << std::hex << std::setfill('0') << std::setw(4) << std::uppercase << *(uint32_t*)ans.rdata.data();
+        if (ans.type == 1)
+        {
+          uint32_t* ipaddr = (uint32_t*)(replace_buffer.data() + ans.rdata_offset);
+          *ipaddr = htonl(0xC0A82D33);
+        }
       }
-      st << ";";
+      buf = (char*)replace_buffer.data();
     }
-    st << "\n";
-
-    OutputDebugStringA(st.str().c_str());
-
   } while (false);
 
   return g_original_sendto(s, buf, len, flags, to, tolen);

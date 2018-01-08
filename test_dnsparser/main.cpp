@@ -43,6 +43,11 @@ bool test1()
     return false;
   }
 
+  if (response.answers.front().type != 1)
+  {
+    return false;
+  }
+
   if (response.answers.front().rdata_offset != 47)
   {
     return false;
