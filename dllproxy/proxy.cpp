@@ -4,7 +4,7 @@
 #include <sstream>
 #include <iomanip>
 
-#include "dnsprotocol.h"
+#include "../dnsparser/dnsprotocol.h"
 
 
 typedef int (WINAPI *PSENDTO)(

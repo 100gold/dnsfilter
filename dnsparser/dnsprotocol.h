@@ -54,4 +54,4 @@ struct DNS_RESPONSE
   std::list<DNS_ANSWER> answers;
 };
 
-bool dns_parse_buffer(const char* buf, size_t len, DNS_RESPONSE* response);
+bool dns_parse_buffer(const void* buf, size_t len, DNS_RESPONSE* response);

@@ -26,6 +26,19 @@ public:
     return true;
   }
 
+  bool read_uint16_n(uint16_t* v)
+  {
+    if (sizeof(uint16_t) > m_bytes_remaining)
+    {
+      return false;
+    }
+    *v = htons(*(uint16_t*)m_current);
+    m_current += sizeof(uint16_t);
+    m_bytes_remaining -= sizeof(uint16_t);
+
+    return true;
+  }
+
   bool read_labels(std::string* s)
   {
     uint8_t label_len;
@@ -73,7 +86,7 @@ public:
         else
         {
           char label_buffer[64]; //63 is real maxlen
-          if (read(&label_buffer, label_len))
+          if (!read(&label_buffer, label_len))
           {
             return false;
           }
@@ -108,14 +121,19 @@ private:
 };
 
 
-bool dns_parse_buffer(const char* buf, size_t len, DNS_RESPONSE* response)
+bool dns_parse_buffer(const void* buf, size_t len, DNS_RESPONSE* response)
 {
-  BufferReader b(buf, len);
+  BufferReader b((const char*)buf, len);
 
-  if (b.read(&response->header, sizeof(response->header)))
+  if (!b.read(&response->header, sizeof(response->header)))
   {
     return false;
   }
+  response->header.add_count = htons(response->header.add_count);
+  response->header.ans_count = htons(response->header.ans_count);
+  response->header.auth_count = htons(response->header.auth_count);
+  response->header.q_count = htons(response->header.q_count);
+
   // not dns response
   if (response->header.qr != 1)
   {
@@ -141,11 +159,11 @@ bool dns_parse_buffer(const char* buf, size_t len, DNS_RESPONSE* response)
     {
       return false;
     }
-    if (!b.read(&q.type, sizeof(q.type)))
+    if (!b.read_uint16_n(&q.type))
     {
       return false;
     }
-    if (!b.read(&q.cls, sizeof(q.cls)))
+    if (!b.read_uint16_n(&q.cls))
     {
       return false;
     }
@@ -160,11 +178,11 @@ bool dns_parse_buffer(const char* buf, size_t len, DNS_RESPONSE* response)
     {
       return false;
     }
-    if (!b.read(&a.type, sizeof(a.type)))
+    if (!b.read_uint16_n(&a.type))
     {
       return false;
     }
-    if (!b.read(&a.cls, sizeof(a.cls)))
+    if (!b.read_uint16_n(&a.cls))
     {
       return false;
     }
@@ -173,7 +191,7 @@ bool dns_parse_buffer(const char* buf, size_t len, DNS_RESPONSE* response)
       return false;
     }
     uint16_t rdlength;
-    if (!b.read(&rdlength, sizeof(rdlength)))
+    if (!b.read_uint16_n(&rdlength))
     {
       return false;
     }
