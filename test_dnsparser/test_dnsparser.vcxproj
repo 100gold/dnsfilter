@@ -22,6 +22,7 @@
     <ProjectGuid>{6C7A2C19-73AB-4714-AE97-97FE65FA4059}</ProjectGuid>
     <RootNamespace>dnsparser_test</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <ProjectName>test_dnsparser</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

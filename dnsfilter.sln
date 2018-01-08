@@ -3,12 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dlltesthost", "dlltesthost\dlltesthost.vcxproj", "{23C1E19B-3CEE-4834-BDDC-B87D558DDDFF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_dllhost", "test_dllhost\test_dllhost.vcxproj", "{23C1E19B-3CEE-4834-BDDC-B87D558DDDFF}"
 	ProjectSection(ProjectDependencies) = postProject
 		{891C7F4E-B5F6-4FA3-A531-C4227EB9140E} = {891C7F4E-B5F6-4FA3-A531-C4227EB9140E}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testdlltag", "testdlltag\testdlltag.vcxproj", "{891C7F4E-B5F6-4FA3-A531-C4227EB9140E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_targetdll", "test_targetdll\test_targetdll.vcxproj", "{891C7F4E-B5F6-4FA3-A531-C4227EB9140E}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dllproxy", "dllproxy\dllproxy.vcxproj", "{A15417D3-FB1F-45C7-9F87-0F14B87144B3}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -24,7 +24,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "proxybuilder", "proxybuilde
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dnsparser", "dnsparser\dnsparser.vcxproj", "{38B67633-51C5-40DB-BCB5-0FCAB6530B48}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dnsparser_test", "dnsparser_test\dnsparser_test.vcxproj", "{6C7A2C19-73AB-4714-AE97-97FE65FA4059}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_dnsparser", "test_dnsparser\test_dnsparser.vcxproj", "{6C7A2C19-73AB-4714-AE97-97FE65FA4059}"
 	ProjectSection(ProjectDependencies) = postProject
 		{38B67633-51C5-40DB-BCB5-0FCAB6530B48} = {38B67633-51C5-40DB-BCB5-0FCAB6530B48}
 	EndProjectSection
