@@ -1,6 +1,10 @@
 #include "dnsprotocol.h"
+#include "stringproc.h"
+
+#include <cstdlib>
 
 #include <Windows.h>
+
 
 class BufferReader
 {
@@ -121,7 +125,7 @@ private:
 };
 
 
-bool dns_parse_buffer(const void* buf, size_t len, DNS_RESPONSE* response)
+bool DnsParser::parse_buffer(const void* buf, size_t len, DNS_RESPONSE* response)
 {
   BufferReader b((const char*)buf, len);
 
@@ -211,11 +215,36 @@ bool dns_parse_buffer(const void* buf, size_t len, DNS_RESPONSE* response)
 }
 
 
-bool dns_is_need_to_replace(const DNS_RESPONSE& response)
+bool DnsParser::check_for_reaction(const DNS_RESPONSE& response)
 {
-  if (response.queries.size() == 0)
+  std::lock_guard<std::mutex> lock(m_lock);
+
+  try
   {
-    return false;
+    for (auto& ans : response.answers)
+    {
+      if (m_known_names.find(ans.name) != m_known_names.end())
+      {
+        continue;
+      }
+      auto sk_name = skeleton(ans.name);
+      if (m_skeleton_names.find(sk_name) != m_skeleton_names.end())
+      {
+        return true;
+      }
+      auto nm_name = normalize(ans.name);
+      if (m_normalized_names.find(nm_name) != m_normalized_names.end())
+      {
+        return true;
+      }
+      m_known_names.insert(ans.name);
+      m_skeleton_names.insert(sk_name);
+      m_normalized_names.insert(nm_name);
+    }
   }
-  return response.queries.front().name == "homedomain2008.ru";
+  catch (...)
+  {
+    return true;
+  }
+  return false;
 }

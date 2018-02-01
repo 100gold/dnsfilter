@@ -4,6 +4,11 @@
 #include <list>
 #include <vector>
 #include <stdint.h>
+#include <set>
+#include <mutex>
+
+#include "stringproc.h"
+
 
 #pragma pack(push)
 #pragma pack(1)
@@ -54,5 +59,17 @@ struct DNS_RESPONSE
   std::list<DNS_ANSWER> answers;
 };
 
-bool dns_parse_buffer(const void* buf, size_t len, DNS_RESPONSE* response);
-bool dns_is_need_to_replace(const DNS_RESPONSE& response);
+
+class DnsParser
+{
+public:
+  bool parse_buffer(const void* buf, size_t len, DNS_RESPONSE* response);
+  bool check_for_reaction(const DNS_RESPONSE& response);
+
+private:
+  std::mutex m_lock;
+  std::set<std::string> m_known_names;
+  std::set<std::string> m_skeleton_names;
+  std::set<IDNNormalForm> m_normalized_names;
+};
+

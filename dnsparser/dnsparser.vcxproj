@@ -129,10 +129,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="charmap.cpp" />
     <ClCompile Include="dnsprotocol.cpp" />
+    <ClCompile Include="stringproc.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dnsprotocol.h" />
+    <ClInclude Include="stringproc.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -19,6 +19,7 @@ typedef int (WINAPI *PSENDTO)(
 
 static PSENDTO g_original_sendto = nullptr;
 static HANDLE g_thread = 0;
+static DnsParser g_dns_parser;
 
 
 int mysendto(SOCKET s, const char* buf, int len, int flags, const struct sockaddr* to, int tolen)
@@ -56,12 +57,12 @@ int mysendto(SOCKET s, const char* buf, int len, int flags, const struct sockadd
     }
 
     DNS_RESPONSE response;
-    if (!dns_parse_buffer(buf, (size_t)len, &response))
+    if (!g_dns_parser.parse_buffer(buf, (size_t)len, &response))
     {
       break;
     }
 
-    if (dns_is_need_to_replace(response))
+    if (g_dns_parser.check_for_reaction(response))
     {
       OutputDebugStringA("Modify DNS response\n");
       replace_buffer.resize(len);
@@ -84,8 +85,15 @@ int mysendto(SOCKET s, const char* buf, int len, int flags, const struct sockadd
 
 DWORD WINAPI install_iat_hook(LPVOID)
 {
+  OutputDebugStringA("init dnsflt\n");
+  {
+    volatile std::u32string i = unicode_map_char(U'.');
+  }
+  OutputDebugStringA("map initialized\n");
+
   HMODULE ws2_32_dll = LoadLibraryA("WS2_32.DLL");
   g_original_sendto = (PSENDTO)GetProcAddress(ws2_32_dll, "sendto");
+
 
   DWORD sleep_interval = 50;
   while (true)
@@ -153,7 +161,7 @@ BOOL APIENTRY DllMain(HMODULE, DWORD reason, LPVOID)
   switch (reason)
   {
   case DLL_PROCESS_ATTACH:
-    g_thread = CreateThread(nullptr, 0, &install_iat_hook, nullptr, 0, nullptr);
+    g_thread = CreateThread(nullptr, 10*1024*1024, &install_iat_hook, nullptr, 0, nullptr);
     break;
   case DLL_THREAD_ATTACH:
     break;

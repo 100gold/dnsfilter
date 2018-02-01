@@ -18,9 +18,18 @@
     <ClCompile Include="dnsprotocol.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="stringproc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="charmap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dnsprotocol.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stringproc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

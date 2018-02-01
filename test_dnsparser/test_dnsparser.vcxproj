@@ -95,6 +95,8 @@
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)\build\out\$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
       <AdditionalDependencies>dnsparser.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <StackReserveSize>
+      </StackReserveSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -107,6 +109,8 @@
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)\build\out\$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
       <AdditionalDependencies>dnsparser.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <StackReserveSize>
+      </StackReserveSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -123,6 +127,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(SolutionDir)\build\out\$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
       <AdditionalDependencies>dnsparser.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <StackReserveSize>
+      </StackReserveSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -139,6 +145,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(SolutionDir)\build\out\$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
       <AdditionalDependencies>dnsparser.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <StackReserveSize>
+      </StackReserveSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
