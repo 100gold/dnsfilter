@@ -145,7 +145,11 @@ public:
     // Copy data & fix offsets
     memcpy(&result[0], m_file_data, old_total_header_size);
 
+#ifdef _WIN64
     auto new_nt_header = (IMAGE_NT_HEADERS64*)((ptrdiff_t)&result[0] + ((ptrdiff_t)m_nt_header - (ptrdiff_t)m_file_data));
+#else
+	auto new_nt_header = (IMAGE_NT_HEADERS32*)((ptrdiff_t)&result[0] + ((ptrdiff_t)m_nt_header - (ptrdiff_t)m_file_data));
+#endif
     new_nt_header->FileHeader.NumberOfSections += 1;
     new_nt_header->OptionalHeader.SizeOfImage += WITH_ALIGNMENT(new_section.m_data.size(), m_nt_header->OptionalHeader.SectionAlignment);
     new_nt_header->OptionalHeader.SizeOfHeaders = new_total_header_size_with_padding;
